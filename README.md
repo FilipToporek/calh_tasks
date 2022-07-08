@@ -4,8 +4,9 @@ Pod adresem https://coding-academy.pl/all_customers znajduje się lista numerów
 Serwis zwraca dane w formacie xml. Napisz skrypt łączący się ze ww serwisem, pobierający dane i zapisujący je do pliku tekstowego (każdy numer w osobnym wierszu; nazwa pliku task1_solution.txt).
 
 Aby uznać zadanie za zaliczone użyj bibliotek:
-- Requests [https://requests.readthedocs.io/en/latest/]
-- ElementTree [https://docs.python.org/3/library/xml.etree.elementtree.html]
+
+- [Requests] (https://requests.readthedocs.io/en/latest/)
+- [ElementTree] (https://docs.python.org/3/library/xml.etree.elementtree.html)
 
 ## Przykład:
 wejście (fragment pozyskany z https://coding-academy.pl/all_customers)
@@ -14,6 +15,7 @@ wejście (fragment pozyskany z https://coding-academy.pl/all_customers)
 <customer>2878037</customer>
 <customer>9151082</customer>
 <customer>3728381</customer>
+...
 ```
 
 wyjście (to zapisujesz do pliku)
@@ -21,11 +23,14 @@ wyjście (to zapisujesz do pliku)
 2878037
 9151082
 3728381
+...
 ```
 
 # Zadanie 2
 Każdy klient banku ma przypisane do siebie numery kont. Numery dla poszczególnych klientów można pobrać z serwisu:
-https://coding-academy.pl/customer/<cunbr> (zobacz np. https://coding-academy.pl/customer/2878037). Niestety serwis zwraca dane w formacie xml, a w aplikacji potrzebujemy jsona. Napisz adapter:
+`https://coding-academy.pl/customer/<cunbr>` (zobacz np. `https://coding-academy.pl/customer/2878037`).
+
+Niestety serwis zwraca dane w formacie xml, a w aplikacji potrzebujemy jsona. Napisz adapter:
 - zmieniający request w json na poprawne wywołanie serwisu
 - zmieniający odpowiedź w xml na poprawną odpowiedź w formacie json
 
