@@ -40,10 +40,8 @@ class XMLWebServiceInvoker:
         pass
 
     def request(self, cunbr):
-        # Make request to xml webservice with cunbr number
-        # returns xml webservice response as string
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        response = requests.get(f"https://coding-academy.pl/customer/{cunbr}")
+        return response.text
 
 
 class Adapter(Target):
@@ -52,67 +50,66 @@ class Adapter(Target):
         self.adaptee = adaptee
 
     def request(self, json_request):
-        # IMPLEMENT ME PLZ!
-        # json_request - request w formacie json zgodny z formatem:
-        # {
-        #     "customer_request": {
-        #         "customer": {
-        #             "cunbr": "2878037"
-        #         }
-        #     }
-        # }
-        #
-        # Wyłuskaj numer cunbr z requersta i wykonaj zapytanie do serwisu
-        # Pozyskany XML prezkonwertuj na json
-        # Pamiętaj o użyciu buildera do stworzenia json response.
-        # Zwróc json_response w formie stringa zgodny z formatem:
-        # {
-        #   "customer_response": {
-        #     "customer": {
-        #       "cunbr": "2878037",
-        #       "accounts": ["92374593074", "12429840547", "48940397874", "28007854550", "26016119210"]
-        #     }
-        #   }
-        # }
-        raise NotImplementedError
+        json_dict = json.loads(json_request)
+        cunbr = json_dict['customer_request']['customer']['cunbr']
+        xml_response = self.adaptee.request(cunbr)
+        xml = ET.fromstring(xml_response)
+
+        accounts = list()
+        for element in xml.findall('./accounts/account'):
+            accounts.append(element.text)
+
+        builder = JsonResponseBuilder()
+        builder.with_cunbr(cunbr)
+        builder.with_accounts(accounts)
+
+        return builder.build()
 
 
 class AbstractJsonBuilder(ABC):
     @abstractmethod
     def __init__(self):
-        pass
+        self._json_dict = dict()
 
     @abstractmethod
     def with_cunbr(self, cunbr):
         pass
 
     def build(self):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        return json.dumps(self._json_dict)
 
 
 class JsonResponseBuilder(AbstractJsonBuilder):
     def __init__(self):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        self._json_dict = {
+            'customer_response': {
+                'customer': {
+
+                }
+            }
+        }
 
     def with_cunbr(self, cunbr):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        self._json_dict['customer_response']['customer']['cunbr'] = cunbr
+        return self
 
     def with_accounts(self, accounts):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        self._json_dict['customer_response']['customer']['accounts'] = accounts
+        return self
 
 
 class JsonRequestBuilder(AbstractJsonBuilder):
     def __init__(self):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        self._json_dict = {
+            'customer_request': {
+                'customer': {
+                }
+            }
+        }
 
     def with_cunbr(self, cunbr):
-        # IMPLEMENT ME PLZ!
-        raise NotImplementedError
+        self._json_dict['customer_request']['customer']['cunbr'] = cunbr
+        return self
 
 
 def client_code(service, payload):
@@ -137,16 +134,15 @@ if __name__ == '__main__':
     with open('json_responses.txt', 'w') as file:
         for response in json_responses:
             file.write(response)
-    # target = Target()
-    # response = client_code(target, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
-    # print(response)
-    #
+
+    target = Target()
+    response = client_code(target, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
+    print(response)
     # # Run client code with native xml service (returns 404)
-    # xml_web_service = XMLWebServiceInvoker()
-    # response = client_code(xml_web_service, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
-    # print(response)
-    #
+    xml_web_service = XMLWebServiceInvoker()
+    response = client_code(xml_web_service, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
+    print(response)
     # # Run client code with webservice using adapter
-    # adapter = Adapter(xml_web_service)
-    # response = client_code(adapter, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
-    # print(response)
+    adapter = Adapter(xml_web_service)
+    response = client_code(adapter, '{"customer_request": {"customer": {"cunbr": "2878037"}}}')
+    print(response)
