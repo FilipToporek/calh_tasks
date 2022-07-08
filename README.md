@@ -5,8 +5,8 @@ Serwis zwraca dane w formacie xml. Napisz skrypt łączący się ze ww serwisem,
 
 Aby uznać zadanie za zaliczone użyj bibliotek:
 
-- [Requests] (https://requests.readthedocs.io/en/latest/)
-- [ElementTree] (https://docs.python.org/3/library/xml.etree.elementtree.html)
+- [Requests](https://requests.readthedocs.io/en/latest/)
+- [ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html)
 
 ## Przykład:
 wejście (fragment pozyskany z https://coding-academy.pl/all_customers)
